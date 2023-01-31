@@ -21,8 +21,8 @@ public class Main {
 		// 모든 게시글을 저장하여 가지고 있는 배열 "ArrayList"
 		// ☆게시글(값)이 증가하는 만큼 배열에 크기가 값만큼 자동으로 증가하는 배열
 
-		 TestData();
-		
+		TestData();
+
 		// 무한루프 반복문
 		while (true) {
 			System.out.printf("명령어 )");
@@ -69,10 +69,10 @@ public class Main {
 
 					continue; // 없는 경우에는 게시글을 작성해야 하므로 위에 식으로 올라간다
 				}
-				System.out.println("번호     ㅣ     제목");
+				System.out.println("번호  ㅣ  제목  ㅣ  조회");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
-					System.out.printf("%d     ㅣ     %s\n", article.id, article.title);
+					System.out.printf("%d   ㅣ    %s   ㅣ    %d\n", article.id, article.title,article.viewCnt);
 				}
 
 			} else if (cmd.startsWith("article detail ")) {
@@ -95,11 +95,14 @@ public class Main {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
 				} else {
+					foundArticle.inc();
+					
 					System.out.printf("%d번 게시물은 존재합니다.\n", id);
 					System.out.printf("번호 : %d\n", foundArticle.id);
 					System.out.printf("날짜 : %s\n", foundArticle.regDate);
 					System.out.printf("제목 : %s\n", foundArticle.title);
 					System.out.printf("내용 : %s\n", foundArticle.body);
+					System.out.printf("조회수 : %d\n", foundArticle.viewCnt);
 				}
 			} else if (cmd.startsWith("article delete ")) {
 				String[] cmdBits = cmd.split(" ");
@@ -128,8 +131,7 @@ public class Main {
 				articles.remove(foundIndex);
 				System.out.printf("%d번 게시물이 삭제 되었습니다\n", id);
 
-			}
-			else if (cmd.startsWith("article modify ")) {
+			} else if (cmd.startsWith("article modify ")) {
 				String[] cmdBits = cmd.split(" ");
 				// cmdBits[0] == article cmdBits[1] == detail cmdBits[2] == "정수형 숫자"
 				int id = Integer.parseInt(cmdBits[2]);
@@ -148,21 +150,21 @@ public class Main {
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
-				} else {
-					System.out.printf("수정할 제목을 입력하세요 : ");
-					String title = sc.nextLine();
-					System.out.printf("수정할 제목 %s\n",foundArticle.title);
-					foundArticle.title = title;
-					System.out.printf("수정한 제목 %s\n",foundArticle.title);
-					
-					
-					System.out.printf("수정할 내용을 입력하세요 : ");
-					String body = sc.nextLine();
-					System.out.printf("수정할 내용 %s\n",foundArticle.body);
-					foundArticle.body = body;	
-					System.out.printf("수정한 내용 %s\n",foundArticle.body);
-					System.out.printf("%d번 글이 수정되었습니다.\n", id);
 				}
+
+				System.out.printf("수정할 제목을 입력하세요 : ");
+				String title = sc.nextLine();
+				System.out.printf("수정할 제목 %s\n", foundArticle.title);
+				foundArticle.title = title;
+				System.out.printf("수정한 제목 %s\n", foundArticle.title);
+
+				System.out.printf("수정할 내용을 입력하세요 : ");
+				String body = sc.nextLine();
+				System.out.printf("수정할 내용 %s\n", foundArticle.body);
+				foundArticle.body = body;
+				System.out.printf("수정한 내용 %s\n", foundArticle.body);
+				System.out.printf("%d번 글이 수정되었습니다.\n", id);
+
 			}
 
 			else {
@@ -173,7 +175,6 @@ public class Main {
 
 		}
 
-
 		sc.close(); // 스캐너 종료
 
 		System.out.println("== 프로그램 종료 == ");
@@ -182,8 +183,7 @@ public class Main {
 	private static void TestData() {
 		System.out.println("테스트를 위한 데이터를 생성합니다.");
 		Article Articles[] = new Article[2];
-		
-	
+
 	}
 }
 
@@ -192,6 +192,7 @@ class Article {
 	String title;// 게시글 시간
 	String body;// 게시글 제목
 	String regDate;// 게시글 내용
+	int viewCnt;// 게시글 조회수
 
 	public Article(int id, String regDate, String title, String body) {
 		// 넘겨받는 정보를 class Article를 보고 만든 객체(article)에 this.id(등)을통해 정보를 대입하여 저장한다
@@ -201,8 +202,11 @@ class Article {
 		this.title = title;
 		this.body = body;
 		this.regDate = regDate;
+		this.viewCnt = 0;
 
 	}
-	
+	public void inc() {
+		viewCnt++;
+	}
 
 }
