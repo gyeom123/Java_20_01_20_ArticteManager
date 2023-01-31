@@ -10,18 +10,24 @@ import java.util.concurrent.CountDownLatch;
 import org.w3c.dom.css.CSSRule;
 
 public class Main {
+	private static List<Article> articles;
+
+	static {
+		articles = new ArrayList<>(); // static은 static끼리만 소통
+	}
+
 	public static void main(String[] args) {
 		System.out.println("== 프로그램 시작 == ");
+
+		TestData();
 
 		Scanner sc = new Scanner(System.in);
 
 		int lastArticleId = 0; // 들어는 순서되로 번호를 매길 수 있게 만든 변수 ☆무한루프문 안에 있으면 계속 0으로 초기화 된다.
+		// articles.size
 
-		List<Article> articles = new ArrayList<>();
 		// 모든 게시글을 저장하여 가지고 있는 배열 "ArrayList"
 		// ☆게시글(값)이 증가하는 만큼 배열에 크기가 값만큼 자동으로 증가하는 배열
-
-		TestData();
 
 		// 무한루프 반복문
 		while (true) {
@@ -42,7 +48,7 @@ public class Main {
 			}
 
 			if (cmd.equals("article write")) {
-				int id = lastArticleId + 1; // id를 통해 입력받은 게시글 수 만큼 1씩 카운트를 목적으로 하는 변수를 만든다.
+				int id = articles.size() + 1; // id를 통해 입력받은 게시글 수 만큼 1씩 카운트를 목적으로 하는 변수를 만든다.
 				lastArticleId = id; // 1씩 카운팅을 위해 대입 ☆대입을 하지않으면 "lastArticleId"값은 계속 0이다
 
 				String regDate = Util.getNowDateStr();
@@ -72,7 +78,7 @@ public class Main {
 				System.out.println("번호  ㅣ  제목  ㅣ  조회");
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
-					System.out.printf("%d   ㅣ    %s   ㅣ    %d\n", article.id, article.title,article.viewCnt);
+					System.out.printf("%d   ㅣ    %s   ㅣ    %d\n", article.id, article.title, article.viewCnt);
 				}
 
 			} else if (cmd.startsWith("article detail ")) {
@@ -96,7 +102,7 @@ public class Main {
 					continue;
 				} else {
 					foundArticle.inc();
-					
+
 					System.out.printf("%d번 게시물은 존재합니다.\n", id);
 					System.out.printf("번호 : %d\n", foundArticle.id);
 					System.out.printf("날짜 : %s\n", foundArticle.regDate);
@@ -182,7 +188,9 @@ public class Main {
 
 	private static void TestData() {
 		System.out.println("테스트를 위한 데이터를 생성합니다.");
-		Article Articles[] = new Article[2];
+		articles.add(new Article(1, Util.getNowDateStr(), "title 1", "body 1", 11));
+		articles.add(new Article(2, Util.getNowDateStr(), "title 2", "body 2", 22));
+		articles.add(new Article(3, Util.getNowDateStr(), "title 3", "body 3", 33));
 
 	}
 }
@@ -195,6 +203,12 @@ class Article {
 	int viewCnt;// 게시글 조회수
 
 	public Article(int id, String regDate, String title, String body) {
+
+		this(id, regDate, title, body, 0);
+
+	}
+
+	public Article(int id, String regDate, String title, String body, int viewCnt) {
 		// 넘겨받는 정보를 class Article를 보고 만든 객체(article)에 this.id(등)을통해 정보를 대입하여 저장한다
 		// ☆저장의 목적은 호출을 위해 만든다
 
@@ -205,6 +219,7 @@ class Article {
 		this.viewCnt = 0;
 
 	}
+
 	public void inc() {
 		viewCnt++;
 	}
