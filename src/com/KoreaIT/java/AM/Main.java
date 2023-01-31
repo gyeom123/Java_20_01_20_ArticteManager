@@ -21,6 +21,8 @@ public class Main {
 		// 모든 게시글을 저장하여 가지고 있는 배열 "ArrayList"
 		// ☆게시글(값)이 증가하는 만큼 배열에 크기가 값만큼 자동으로 증가하는 배열
 
+		 TestData();
+		
 		// 무한루프 반복문
 		while (true) {
 			System.out.printf("명령어 )");
@@ -127,6 +129,41 @@ public class Main {
 				System.out.printf("%d번 게시물이 삭제 되었습니다\n", id);
 
 			}
+			else if (cmd.startsWith("article modify ")) {
+				String[] cmdBits = cmd.split(" ");
+				// cmdBits[0] == article cmdBits[1] == detail cmdBits[2] == "정수형 숫자"
+				int id = Integer.parseInt(cmdBits[2]);
+
+				Article foundArticle = null;
+
+				for (int i = 0; i < articles.size(); i++) {
+					Article article = articles.get(i);
+
+					if (article.id == id) {
+						foundArticle = article;
+						break;// 가장 가까운 반복문 종료
+					}
+				}
+
+				if (foundArticle == null) {
+					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
+					continue;
+				} else {
+					System.out.printf("수정할 제목을 입력하세요 : ");
+					String title = sc.nextLine();
+					System.out.printf("수정할 제목 %s\n",foundArticle.title);
+					foundArticle.title = title;
+					System.out.printf("수정한 제목 %s\n",foundArticle.title);
+					
+					
+					System.out.printf("수정할 내용을 입력하세요 : ");
+					String body = sc.nextLine();
+					System.out.printf("수정할 내용 %s\n",foundArticle.body);
+					foundArticle.body = body;	
+					System.out.printf("수정한 내용 %s\n",foundArticle.body);
+					System.out.printf("%d번 글이 수정되었습니다.\n", id);
+				}
+			}
 
 			else {
 				System.out.println("없는 명령어입니다.");
@@ -136,9 +173,17 @@ public class Main {
 
 		}
 
+
 		sc.close(); // 스캐너 종료
 
 		System.out.println("== 프로그램 종료 == ");
+	}
+
+	private static void TestData() {
+		System.out.println("테스트를 위한 데이터를 생성합니다.");
+		Article Articles[] = new Article[2];
+		
+	
 	}
 }
 
@@ -158,5 +203,6 @@ class Article {
 		this.regDate = regDate;
 
 	}
+	
 
 }
