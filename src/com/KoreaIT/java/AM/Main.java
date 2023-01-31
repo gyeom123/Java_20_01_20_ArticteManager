@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Scanner;//스캐너 프로그램의 필요한 프로그램
 import java.util.concurrent.CountDownLatch;
 
+import org.w3c.dom.css.CSSRule;
+
 public class Main {
 	public static void main(String[] args) {
 		System.out.println("== 프로그램 시작 == ");
@@ -41,6 +43,8 @@ public class Main {
 				int id = lastArticleId + 1; // id를 통해 입력받은 게시글 수 만큼 1씩 카운트를 목적으로 하는 변수를 만든다.
 				lastArticleId = id; // 1씩 카운팅을 위해 대입 ☆대입을 하지않으면 "lastArticleId"값은 계속 0이다
 
+				String regDate = Util.getNowDateStr();
+
 				System.out.println("제목 : ");
 				String title = sc.nextLine();
 				// 입력받은 명령어를 변수 "title"에 놓는다 ※제목을 저장할려고 만든 변수 : title
@@ -51,7 +55,7 @@ public class Main {
 				System.out.printf("%d번글이 생성되었습니다.\n", id);
 				// 위에 해당조건을 모두 만족했으면 글이 생성된거이므로 "글이 생성되었습니다."출력문을 통해 글생성을 알려준다
 
-				Article article = new Article(id, title, body);
+				Article article = new Article(id, regDate, title, body);
 				// 입력받은 번호(id)와 제목(title),내용(body)을 저장하기 위해 class Article를 만들고 해당 정보를 넘겨준다
 
 				articles.add(article); // 입력받은 정보를 배열 " articles " 넣겠다
@@ -90,40 +94,37 @@ public class Main {
 					continue;
 				} else {
 					System.out.printf("%d번 게시물은 존재합니다.\n", id);
-					System.out.printf("번호 : %d \n", foundArticle.id);
-					System.out.printf("날짜 : 123123123 \n");
+					System.out.printf("번호 : %d\n", foundArticle.id);
+					System.out.printf("날짜 : %s\n", foundArticle.regDate);
 					System.out.printf("제목 : %s\n", foundArticle.title);
 					System.out.printf("내용 : %s\n", foundArticle.body);
 				}
 			} else if (cmd.startsWith("article delete ")) {
 				String[] cmdBits = cmd.split(" ");
-			
+
 				int id = Integer.parseInt(cmdBits[2]);
 
-				Article foundArticle = null;
-				int 게시물삭제 = 0;
+				int foundIndex = -1; // 없는 경우를 대비
 
 				for (int i = 0; i < articles.size(); i++) {
 					Article article = articles.get(i);
 
 					if (article.id == id) {
-						게시물삭제 = id;
-						foundArticle = article;
+						foundIndex = i; // 만약 찾고자 하는 게시물이 있다면 변수foundIndex에 찾은 방번호를 넣는다.
 						break;// 가장 가까운 반복문 종료
 					}
 				}
 
-				if (foundArticle == null) {
+				if (foundIndex == -1) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다.\n", id);
 					continue;
 				}
-				
-				// size() => 3 
+
+				// size() => 3
 				// index : 0 1 2
-				// id    : 1 2 3
-				
-				articles.remove(게시물삭제);
-				System.out.printf("%d번 게시물이 삭제 되었습니다\n", 게시물삭제);
+				// id : 1 2 3
+				articles.remove(foundIndex);
+				System.out.printf("%d번 게시물이 삭제 되었습니다\n", id);
 
 			}
 
@@ -142,17 +143,20 @@ public class Main {
 }
 
 class Article {
-	int id;
-	String title;
-	String body;
+	int id;// 게시글 번호
+	String title;// 게시글 시간
+	String body;// 게시글 제목
+	String regDate;// 게시글 내용
 
-	public Article(int id, String title, String body) {
+	public Article(int id, String regDate, String title, String body) {
 		// 넘겨받는 정보를 class Article를 보고 만든 객체(article)에 this.id(등)을통해 정보를 대입하여 저장한다
 		// ☆저장의 목적은 호출을 위해 만든다
 
 		this.id = id;
 		this.title = title;
 		this.body = body;
+		this.regDate = regDate;
+
 	}
 
 }
